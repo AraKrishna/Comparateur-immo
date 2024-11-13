@@ -8,7 +8,7 @@ if "biens" not in st.session_state:
 
 # Fonction pour ajouter un bien
 def ajouter_bien():
-    unique_id = str(uuid.uuid4())
+    unique_id = str(uuid.uuid4())  # ID unique pour chaque bien
     bien = {
         "nom": st.text_input("Nom du bien", key=f"nom_{unique_id}"),
         "prix_achat": st.number_input("Prix d'achat (€)", min_value=0, max_value=4000000, step=1000, key=f"prix_achat_{unique_id}"),
