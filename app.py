@@ -7,16 +7,9 @@ if "biens" not in st.session_state:
     st.session_state["biens"] = []
 
 # Fonction pour ajouter un bien
-def ajouter_bien(bien):
-    st.session_state["biens"].append(bien)
-
-# Interface d'ajout de bien
-st.title("Comparateur de Biens Locatifs")
-
-# Utilisation de st.form pour encapsuler les champs d'entrée
-with st.form(key="form_ajouter_bien"):
-    unique_id = str(uuid.uuid4())  # ID unique pour éviter les conflits de clé
-    nouveau_bien = {
+def ajouter_bien():
+    unique_id = str(uuid.uuid4())
+    bien = {
         "nom": st.text_input("Nom du bien", key=f"nom_{unique_id}"),
         "prix_achat": st.number_input("Prix d'achat (€)", min_value=0, max_value=4000000, step=1000, key=f"prix_achat_{unique_id}"),
         "travaux": st.number_input("Travaux (€)", min_value=0, max_value=200000, step=1000, key=f"travaux_{unique_id}"),
@@ -29,12 +22,15 @@ with st.form(key="form_ajouter_bien"):
         "taux_assurance": st.number_input("Taux assurance (%)", min_value=0.0, max_value=4.0, step=0.1, key=f"taux_assurance_{unique_id}"),
         "duree_pret": st.slider("Durée du prêt (années)", min_value=1, max_value=30, value=20, key=f"duree_pret_{unique_id}")
     }
-    
-    # Bouton pour ajouter le bien
-    submit = st.form_submit_button("Ajouter le bien")
-    if submit:
-        ajouter_bien(nouveau_bien)
-        st.success("Bien ajouté avec succès!")
+    st.session_state["biens"].append(bien)
+    st.experimental_rerun()  # Force le rafraîchissement de la page
+
+# Interface d'ajout de bien
+st.title("Comparateur de Biens Locatifs")
+
+# Bouton pour ajouter un bien
+if st.button("Ajouter un bien"):
+    ajouter_bien()
 
 # Calcul des indicateurs pour chaque bien dans la liste
 for bien in st.session_state["biens"]:
