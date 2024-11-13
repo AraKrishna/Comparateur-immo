@@ -13,26 +13,28 @@ def ajouter_bien(bien):
 # Interface d'ajout de bien
 st.title("Comparateur de Biens Locatifs")
 
-# Création d'un nouveau bien
-unique_id = str(uuid.uuid4())
-nouveau_bien = {
-    "nom": st.text_input("Nom du bien", key=f"nom_{unique_id}"),
-    "prix_achat": st.number_input("Prix d'achat (€)", min_value=0, max_value=4000000, step=1000, key=f"prix_achat_{unique_id}"),
-    "travaux": st.number_input("Travaux (€)", min_value=0, max_value=200000, step=1000, key=f"travaux_{unique_id}"),
-    "loyer_mensuel": st.number_input("Loyer mensuel (€)", min_value=0, max_value=5000, step=10, key=f"loyer_mensuel_{unique_id}"),
-    "charges_copropriete": st.number_input("Charges copropriété (mensuel) (€)", min_value=0, max_value=1000, step=5, key=f"charges_copropriete_{unique_id}"),
-    "taxe_fonciere": st.number_input("Taxe foncière (annuel) (€)", min_value=0, max_value=5000, step=10, key=f"taxe_fonciere_{unique_id}"),
-    "apport": st.number_input("Apport (€)", min_value=0, max_value=4000000, step=1000, key=f"apport_{unique_id}"),
-    "montant_pret": st.number_input("Montant du prêt (€)", min_value=0, max_value=4000000, step=1000, key=f"montant_pret_{unique_id}"),
-    "interet_annuel": st.number_input("Taux d'intérêt (%)", min_value=0.0, max_value=10.0, step=0.1, key=f"interet_annuel_{unique_id}"),
-    "taux_assurance": st.number_input("Taux assurance (%)", min_value=0.0, max_value=4.0, step=0.1, key=f"taux_assurance_{unique_id}"),
-    "duree_pret": st.slider("Durée du prêt (années)", min_value=1, max_value=30, value=20, key=f"duree_pret_{unique_id}")
-}
-
-# Bouton pour ajouter le bien
-if st.button("Ajouter le bien", key=f"ajouter_{unique_id}"):
-    ajouter_bien(nouveau_bien)
-    st.success("Bien ajouté avec succès!")
+# Utilisation de st.form pour encapsuler les champs d'entrée
+with st.form(key="form_ajouter_bien"):
+    unique_id = str(uuid.uuid4())  # ID unique pour éviter les conflits de clé
+    nouveau_bien = {
+        "nom": st.text_input("Nom du bien", key=f"nom_{unique_id}"),
+        "prix_achat": st.number_input("Prix d'achat (€)", min_value=0, max_value=4000000, step=1000, key=f"prix_achat_{unique_id}"),
+        "travaux": st.number_input("Travaux (€)", min_value=0, max_value=200000, step=1000, key=f"travaux_{unique_id}"),
+        "loyer_mensuel": st.number_input("Loyer mensuel (€)", min_value=0, max_value=5000, step=10, key=f"loyer_mensuel_{unique_id}"),
+        "charges_copropriete": st.number_input("Charges copropriété (mensuel) (€)", min_value=0, max_value=1000, step=5, key=f"charges_copropriete_{unique_id}"),
+        "taxe_fonciere": st.number_input("Taxe foncière (annuel) (€)", min_value=0, max_value=5000, step=10, key=f"taxe_fonciere_{unique_id}"),
+        "apport": st.number_input("Apport (€)", min_value=0, max_value=4000000, step=1000, key=f"apport_{unique_id}"),
+        "montant_pret": st.number_input("Montant du prêt (€)", min_value=0, max_value=4000000, step=1000, key=f"montant_pret_{unique_id}"),
+        "interet_annuel": st.number_input("Taux d'intérêt (%)", min_value=0.0, max_value=10.0, step=0.1, key=f"interet_annuel_{unique_id}"),
+        "taux_assurance": st.number_input("Taux assurance (%)", min_value=0.0, max_value=4.0, step=0.1, key=f"taux_assurance_{unique_id}"),
+        "duree_pret": st.slider("Durée du prêt (années)", min_value=1, max_value=30, value=20, key=f"duree_pret_{unique_id}")
+    }
+    
+    # Bouton pour ajouter le bien
+    submit = st.form_submit_button("Ajouter le bien")
+    if submit:
+        ajouter_bien(nouveau_bien)
+        st.success("Bien ajouté avec succès!")
 
 # Calcul des indicateurs pour chaque bien dans la liste
 for bien in st.session_state["biens"]:
