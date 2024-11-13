@@ -37,22 +37,22 @@ for i, bien in enumerate(st.session_state["biens"]):
     # Calcul du revenu locatif annuel
     revenu_locatif_annuel = bien["loyer_mensuel"] * 12
 
-    # Rentabilité brute
-    rentabilite_brute = (revenu_locatif_annuel / cout_total_bien) * 100
+    # Rentabilité brute (éviter division par zéro en vérifiant cout_total_bien)
+    rentabilite_brute = (revenu_locatif_annuel / max(cout_total_bien, 1)) * 100
 
     # Frais annuels totaux (charges copropriété + taxe foncière)
     frais_annuels_total = (bien["charges_copropriete"] * 12) + bien["taxe_fonciere"]
 
     # Rentabilité nette avant impôts
-    rentabilite_nette = ((revenu_locatif_annuel - frais_annuels_total) / cout_total_bien) * 100
+    rentabilite_nette = ((revenu_locatif_annuel - frais_annuels_total) / max(cout_total_bien, 1)) * 100
 
     # Calcul des mensualités de prêt et assurance
     taux_mensuel = bien["interet_annuel"] / 100 / 12
-    mensualite_pret = bien["montant_pret"] * taux_mensuel / (1 - (1 + taux_mensuel) ** (-bien["duree_pret"] * 12))
+    mensualite_pret = bien["montant_pret"] * taux_mensuel / (1 - (1 + taux_mensuel) ** (-bien["duree_pret"] * 12)) if taux_mensuel != 0 else 0
     mensualite_assurance = (bien["montant_pret"] * bien["taux_assurance"] / 100) / 12
     mensualite_pret_totale = mensualite_pret + mensualite_assurance
 
-    # Cashflow mensuel
+    # Cashflow mensuel (éviter division par zéro pour les frais annuels)
     cashflow_mensuel = bien["loyer_mensuel"] - (frais_annuels_total / 12) - mensualite_pret_totale
 
     # Stockage des résultats pour chaque bien
